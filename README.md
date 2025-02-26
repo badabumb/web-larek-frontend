@@ -17,22 +17,78 @@
 
 ## Архитектура системы, основные сущности  
 
-### 1. **Catalog**  
-- Хранит информацию о доступных товарах.  
-- Связан с **Basket** (корзиной), где товары добавляются пользователем.  
+### 1. **Catalog** (Каталог товаров)  
+Каталог содержит список доступных товаров и предоставляет интерфейс для их получения.  
+
+```
+typescript
+export interface ICatalog {
+    products: IProduct[];
+    setCatalog(): void;
+}
+```
+* products – массив товаров.
+* setCatalog() – метод для загрузки каталога.
 
 ### 2. **Basket**  
 - Содержит товары, которые пользователь выбрал для покупки.  
 - Может включать несколько товаров из каталога.  
 - Является **родительским** объектом для **OrderData**.  
 
+```
+export interface IBasket {
+    products: Map<string, IProduct>;
+    total: number;
+    addProduct(id: string): void;
+    removeProduct(id: string): void;
+}
+```
+* products – товары, добавленные пользователем.
+* total – итоговая сумма заказа.
+* addProduct(id: string) – добавляет товар в корзину.
+* removeProduct(id: string) – удаляет товар из корзины.
+
+
 ### 3. **OrderData**  
 - Содержит информацию о заказе после его оформления.  
 - Является **дочерним** объектом для **Basket**.  
+
+```
+export interface IOrderData {
+    payment: string;
+    address: string;
+    email: string;
+    phone: string;
+    products: string[];
+    total: number;
+    getProductsFromBasket(basket: IBasket): void;
+}
+```
+* payment – способ оплаты.
+* address, email, phone – контактные данные.
+* products – список товаров.
+* total – итоговая сумма заказа.
+* getProductsFromBasket(basket: IBasket) – метод, извлекающий товары из корзины.
+
 ---
 ### Взаимодействие сущностей  
 - **Catalog ↔ Basket**: Пользователь добавляет товары в корзину.  
 - **Basket ↔ OrderData**: После оформления заказа данные передаются в объект **OrderData**. 
+
+### API-интерфейсы
+
+Для взаимодействия с сервером используется следующий API:
+
+```
+export interface IWebLarekApi {
+    getCatalog(): Promise<ICatalog>;
+    getProduct(id: number): Promise<IProduct>;
+    makeOrder(data: IOrderData): Promise<IOrderResult>;
+}
+```
+* getCatalog() – загружает каталог товаров.
+* getProduct(id: number) – получает информацию о товаре.
+* makeOrder(data: IOrderData) – отправляет заказ.
 
 ## UML-диаграмма
 Ниже представлена архитектура проекта

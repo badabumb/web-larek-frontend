@@ -3,40 +3,47 @@ import { IEvents } from "../base/events";
 export interface IModalView {
     open(): void;
     close(): void;
+}
 
-    export class ModalView implements IModalView {
-        protected _modalContainer: HTMLElement;
-        protected _closeButton: HTMLButtonElement;
-        protected _content: HTMLElement;
-        protected _pageWrapper: HTMLElement;
+export class ModalView implements IModalView {
+    protected modalContainer: HTMLElement;
+ 	protected closeButton: HTMLButtonElement;
+ 	protected _content: HTMLElement;
+ 	protected _pageWrapper: HTMLElement;
+ 
+ 	constructor(modalContainer: HTMLElement, protected events: IEvents) {
+ 		this.modalContainer = modalContainer;
+ 		this.closeButton = modalContainer.querySelector(".modal__close");
+ 		this._content = modalContainer.querySelector(".modal__content");
+ 		this._pageWrapper = document.querySelector(".page__wrapper");
+ 
+ 		this.closeButton.addEventListener("click", this.close.bind(this));
+ 		this.modalContainer.addEventListener("click", this.close.bind(this));
+ 		this.modalContainer
+ 			.querySelector(".modal__container")
+ 			.addEventListener("click", (event) => event.stopPropagation());
+ 	}
 
-        constructor(modalContainer: HTMLElement, protected events: IEvents) {
-            this._modalContainer = modalContainer;
-            this._closeButton = modalContainer.querySelector(".modal__close");
-            this._content = modalContainer.querySelector(".modal__content");
-            this._pageWrapper = document.querySelector(".page__wrapper");
+    set content(value: HTMLElement) {
+        this._content.replaceChildren(value);
+    }
 
-            this._closeButton.addEventListener("click", this.close.bind(this));
-            this._modalContainer.addEventListener("click", this.close.bind(this));
-            this._modalContainer.querySelector(".modal__container").addEventListener("click", (event) => event.stopPropagation());
-        }
+    open() {
+        this.modalContainer.classList.add("modal_active");
+ 		this.events.emit("modal:open");
+    }
 
-        set content(value: HTMLElement) {
-            this._content.replaceChildren(value);
-        }
+    close() {
+        this.modalContainer.classList.remove("modal_active");
+ 		this.content = null;
+ 		this.events.emit("modal:close");
+    }
 
-        open() {
-            this._modalContainer.classList.remove("modal__active");
-            this.content = null;
-            this.events.emit("modal:close");
-        }
-
-        set locked(value: boolean) {
-            if (value) {
-                this._pageWrapper.classList.add("page__wrapper_locked");
-            } else {
-                this._pageWrapper.classList.remove("page__wrapper_locked");
-            }
+    set locked(value: boolean) {
+        if (value) {
+            this._pageWrapper.classList.add("page__wrapper_locked");
+        } else {
+            this._pageWrapper.classList.remove("page__wrapper_locked");
         }
     }
 }

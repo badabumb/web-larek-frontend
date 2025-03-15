@@ -33,7 +33,9 @@ export class BasketModel implements IBasketModel {
         this.basketProducts.forEach(item => {
             total += item.price;
         });
+
         return total;
+        return this.basketProducts.reduce((total, item) => total + item.price, 0)
     }
 
     addToBasket(data: IProduct) {
@@ -43,7 +45,7 @@ export class BasketModel implements IBasketModel {
     deleteFromBasket(item: IProduct) {
         const index = this.basketProducts.indexOf(item);
         
-        if (index >= 0) {
+        if (index != -1) {
             this._basketProducts.splice(index, 1);
         }
     }

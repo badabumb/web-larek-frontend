@@ -83,7 +83,7 @@ export class EventEmitter implements IEvents {
         return (event: object = {}) => {
             this.emit(eventName, {
                 ...(event || {}),
-                ...(context || {})
+                ...(context || {}),
             });
         };
     }

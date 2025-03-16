@@ -40,10 +40,10 @@ export class BasketView implements IBasketView {
  		);
  
  		this.button.addEventListener("click", () => {
- 			this.events.emit("order:open");
+            this.events.emit("orderForm:open");
  		});
  		this.headerBasketButton.addEventListener("click", () => {
- 			this.events.emit("basket:open");
+            this.events.emit("cart:open");
  		});
  
  		this.items = [];

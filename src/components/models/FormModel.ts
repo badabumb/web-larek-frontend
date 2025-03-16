@@ -1,14 +1,7 @@
-import { FormErrors } from "../../types";
+import { FormErrors, IOrder } from "../../types";
 import { IEvents } from "../base/events";
 
-export interface IFormModel {
-    payment: string;
-    email: string;
-    phone: string;
-    address: string;
-    total: number;
-    items: string[];
-
+export interface IFormModel extends IOrder {
     setOrderData(field: string, value: string): void;
     validateOrder(field: string): boolean;
     getOrderData(): object;
@@ -42,7 +35,7 @@ export class FormModel implements IFormModel {
         }
 
         if (this.validateOrder(field)) {
-            this.events.emit("order:ready", this.getOrderData());
+            this.events.emit("order:valid", this.getOrderData());
         }
     }
 

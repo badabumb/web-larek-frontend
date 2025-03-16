@@ -19,8 +19,8 @@ export class CardModalView extends CardView implements ICardModalView {
         actions?: IActions,
     ) {
         super(template, events, actions);
-        this.description = this._cardElement.querySelector(".card__text");
-        this.button = this._cardElement.querySelector(".card__button");
+        this.description = this.cardElement.querySelector(".card__text");
+ 		this.button = this.cardElement.querySelector(".card__button");
         this.button.addEventListener("click", () => {
             this.events.emit("card:addBasket");
         });
@@ -33,6 +33,6 @@ export class CardModalView extends CardView implements ICardModalView {
             this.button.setAttribute("disabled", "true");
         }
 
-        return this._cardElement;
+        return this.cardElement;
     }
 }

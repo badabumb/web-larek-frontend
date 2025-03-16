@@ -10,18 +10,18 @@ export interface IBasketModel {
 }
 
 export class BasketModel implements IBasketModel {
-    protected _basketProducts: IProduct[];
+    protected _basketProducts: Set<IProduct>;
 
     constructor() {
-        this._basketProducts = [];
+        this._basketProducts = new Set<IProduct>();
     }
 
     set basketProducts(data: IProduct[]) {
-        this.basketProducts = data;
+        this._basketProducts = new Set<IProduct>(data);
     }
 
     get basketProducts() {
-        return this._basketProducts;
+        return Array.from(this._basketProducts);
     }
 
     getAmount() {
@@ -38,16 +38,12 @@ export class BasketModel implements IBasketModel {
         return this.basketProducts.reduce((total, item) => total + item.price, 0)
     }
 
-    addToBasket(data: IProduct) {
-        this._basketProducts.push(data);
+    addToBasket(item: IProduct) {
+        this._basketProducts.add(item);
     }
 
     deleteFromBasket(item: IProduct) {
-        const index = this.basketProducts.indexOf(item);
-        
-        if (index != -1) {
-            this._basketProducts.splice(index, 1);
-        }
+        this._basketProducts.delete(item);
     }
 
     clearBasket() {

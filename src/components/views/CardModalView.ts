@@ -5,6 +5,7 @@ import { CardView } from "./CardView";
 export interface ICardModalView {
     description: HTMLElement;
     button: HTMLElement;
+    toggleButtonDisability(value: boolean): void;
     
     render(data: IProduct): HTMLElement;
 }
@@ -24,6 +25,14 @@ export class CardModalView extends CardView implements ICardModalView {
         this.button.addEventListener("click", () => {
             this.events.emit("card:addBasket");
         });
+    }
+
+    toggleButtonDisability(value: boolean): void {
+        if (value) {
+            this.button.setAttribute("disabled", "true");
+        } else {
+            this.button.removeAttribute("disabled");
+        }
     }
 
     render(data: IProduct): HTMLElement {

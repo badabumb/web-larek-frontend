@@ -12,6 +12,14 @@ export interface ICardView {
     render(data: IProduct): HTMLElement;
 }
 
+export interface ICardViewConstructor {
+	new (
+		template: HTMLTemplateElement,
+		events: IEvents,
+		clickHandler?: (event: MouseEvent) => void
+	): ICardView;
+}
+
 export class CardView implements ICardView {
     cardElement: HTMLElement;
  	cardCategory: HTMLElement;

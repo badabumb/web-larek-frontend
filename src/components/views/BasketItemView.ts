@@ -11,6 +11,14 @@ export interface IBasketItemView {
     render(data: IProduct, item: number): HTMLElement;
 }
 
+export interface IBasketItemViewConstructor {
+    new (
+        template: HTMLTemplateElement,
+        events: IEvents,
+        clickHandler?: (event: MouseEvent) => void
+    ): IBasketItemView;
+}
+
 export class BasketItemView implements IBasketItemView {
     basketItem: HTMLElement;
  	index: HTMLElement;

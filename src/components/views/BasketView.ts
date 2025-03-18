@@ -1,7 +1,7 @@
 import { IEvents } from "../base/events";
 import { cloneTemplate, createElement } from "../../utils/utils";
 import { IProduct } from "../../types";
-import { BasketItemView } from "./BasketItemView";
+import { IBasketItemViewConstructor } from "./BasketItemView";
 
 export interface IBasketView {
     basket: HTMLElement;
@@ -14,7 +14,7 @@ export interface IBasketView {
     items: HTMLElement[];
 
     renderHeaderBasketCounter(value: number): void;
-    renderTotalCost(sumAll: number): void;
+    renderTotalCost(total: number): void;
     render(): HTMLElement;
 }
 
@@ -31,7 +31,8 @@ export class BasketView implements IBasketView {
     constructor(
         template: HTMLTemplateElement,
         protected events: IEvents,
-        protected cartItemTemplate: HTMLTemplateElement
+        protected basketItemTemplate: HTMLTemplateElement,
+        protected basketItemClass: IBasketItemViewConstructor
     ) {
         this.basket = cloneTemplate<HTMLElement>(template);
         this.title = this.basket.querySelector(".modal__title");
@@ -56,10 +57,10 @@ export class BasketView implements IBasketView {
     renderItems(items: IProduct[]) {
         let i = 0;
         this.items = items.map((item) => {
-            const basketItem = new BasketItemView(
-                this.cartItemTemplate,
+            const basketItem = new this.basketItemClass(
+                this.basketItemTemplate,
                 this.events,
-                () => this.events.emit("basket:basketItemRemove", item)
+                () => this.events.emit("cart:removeFromCart", item)
             );
             i = i + 1;
             return basketItem.render(item, i);

@@ -1,4 +1,4 @@
-import { IActions, IProduct } from "../../types";
+import { IProduct } from "../../types";
 import { IEvents } from "../base/events";
 import { CardView } from "./CardView";
 
@@ -16,9 +16,9 @@ export class CardModalView extends CardView implements ICardModalView {
     constructor(
         template: HTMLTemplateElement,
         protected events: IEvents,
-        actions?: IActions,
+        clickHandler?: (event: MouseEvent) => void
     ) {
-        super(template, events, actions);
+        super(template, events, clickHandler);
         this.description = this.cardElement.querySelector(".card__text");
  		this.button = this.cardElement.querySelector(".card__button");
         this.button.addEventListener("click", () => {

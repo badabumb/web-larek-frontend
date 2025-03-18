@@ -28,7 +28,11 @@ export class BasketView implements IBasketView {
     headerBasketCounter: HTMLElement;
     items: HTMLElement[];
 
-    constructor(template: HTMLTemplateElement, protected events: IEvents, protected cartItemTemplate: HTMLTemplateElement) {
+    constructor(
+        template: HTMLTemplateElement,
+        protected events: IEvents,
+        protected cartItemTemplate: HTMLTemplateElement
+    ) {
         this.basket = cloneTemplate<HTMLElement>(template);
         this.title = this.basket.querySelector(".modal__title");
  		this.basketList = this.basket.querySelector(".basket__list");
@@ -52,9 +56,11 @@ export class BasketView implements IBasketView {
     renderItems(items: IProduct[]) {
         let i = 0;
         this.items = items.map((item) => {
-            const basketItem = new BasketItemView(this.cartItemTemplate, this.events, {
-                onClick: () => this.events.emit("basket:basketItemRemove", item),
-            });
+            const basketItem = new BasketItemView(
+                this.cartItemTemplate,
+                this.events,
+                () => this.events.emit("basket:basketItemRemove", item)
+            );
             i = i + 1;
             return basketItem.render(item, i);
         });

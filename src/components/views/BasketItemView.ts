@@ -1,4 +1,4 @@
-import { IActions, IProduct } from "../../types";
+import { IProduct } from "../../types";
 import { IEvents } from "../base/events";
 import { cloneTemplate } from "../../utils/utils";
 
@@ -21,7 +21,7 @@ export class BasketItemView implements IBasketItemView {
     constructor(
         template: HTMLTemplateElement,
         protected events: IEvents,
-        actions?: IActions,
+        clickHandler?: (event: MouseEvent) => void
     ) {
         this.basketItem = cloneTemplate<HTMLElement>(template);
  		this.index = this.basketItem.querySelector(".basket__item-index");
@@ -31,8 +31,8 @@ export class BasketItemView implements IBasketItemView {
  			".basket__item-delete"
  		);
 
-        if (actions?.onClick) {
-            this.deleteButton.addEventListener("click", actions.onClick);
+        if (clickHandler) {
+            this.deleteButton.addEventListener("click", clickHandler);
         }
     }
 

@@ -30,7 +30,7 @@ export class FormModel implements IFormModel {
             this.address = value;
         } else if (field === "email") {
             this.email = value;
-        } else if  (field === "phoneNumber") {
+        } else if  (field === "phone") {
             this.phone = value;
         }
 

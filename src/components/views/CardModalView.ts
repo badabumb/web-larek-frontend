@@ -23,7 +23,7 @@ export class CardModalView extends CardView implements ICardModalView {
         this.description = this.cardElement.querySelector(".card__text");
  		this.button = this.cardElement.querySelector(".card__button");
         this.button.addEventListener("click", () => {
-            this.events.emit("card:addBasket");
+            this.events.emit("card:addToBasket");
         });
     }
 

@@ -24,9 +24,9 @@ import "./scss/styles.scss";
  	ensureElement<HTMLTemplateElement>("#card-catalog");
  const cardModalTemplate: HTMLTemplateElement =
  	ensureElement<HTMLTemplateElement>("#card-preview");
- const cartTemplate: HTMLTemplateElement =
+ const basketTemplate: HTMLTemplateElement =
  	ensureElement<HTMLTemplateElement>("#basket");
- const catalogCartTemplate: HTMLTemplateElement =
+ const catalogBasketTemplate: HTMLTemplateElement =
  	ensureElement<HTMLTemplateElement>("#card-basket");
  const orderTemplate: HTMLTemplateElement =
  	ensureElement<HTMLTemplateElement>("#order");
@@ -40,8 +40,8 @@ import "./scss/styles.scss";
  const events = new EventEmitter();
  const productListModel = new ProductListModel(events);
  const modal = new ModalView(modalContainer, events);
- const cart = new BasketView(cartTemplate, events, catalogCartTemplate, BasketItemView);
- const cartModel = new BasketModel();
+ const basket = new BasketView(basketTemplate, events, catalogBasketTemplate, BasketItemView);
+ const basketModel = new BasketModel();
  const formModel = new FormModel(events);
  const order = new OrderFormView(orderTemplate, events);
  const contacts = new ContactsFormView(contactsTemplate, events);
@@ -58,7 +58,7 @@ import "./scss/styles.scss";
  events.on("cardModal:open", (item: IProduct) => {
  	const cardPreview = new CardModalView(cardModalTemplate, events);
  	modal.content = cardPreview.render(item);
- 	if (cartModel.basketProducts.indexOf(item) !== -1 || item.price == null) {
+ 	if (basketModel.basketProducts.indexOf(item) !== -1 || item.price == null) {
  		cardPreview.toggleButtonDisability(true);
  	} else {
  		cardPreview.toggleButtonDisability(false);
@@ -66,30 +66,30 @@ import "./scss/styles.scss";
  	modal.open();
  });
  
- events.on("card:addToCart", () => {
- 	cartModel.addToBasket(productListModel.selectedCard);
- 	cart.renderHeaderBasketCounter(cartModel.getAmount());
+ events.on("card:addToBasket", () => {
+ 	basketModel.addToBasket(productListModel.selectedCard);
+ 	basket.renderHeaderBasketCounter(basketModel.getAmount());
  	modal.close();
  });
  
- events.on("cart:open", () => {
- 	cart.renderTotalCost(cartModel.getTotalCost());
- 	cart.renderItems(cartModel.basketProducts);
- 	modal.content = cart.render();
+ events.on("basket:open", () => {
+ 	basket.renderTotalCost(basketModel.getTotalCost());
+ 	basket.renderItems(basketModel.basketProducts);
+ 	modal.content = basket.render();
  	modal.open();
  });
  
- events.on("cart:removeFromCart", (item: IProduct) => {
- 	cartModel.deleteFromBasket(item);
- 	cart.renderHeaderBasketCounter(cartModel.getAmount());
- 	cart.renderTotalCost(cartModel.getTotalCost());
- 	cart.renderItems(cartModel.basketProducts);
+ events.on("basket:removeFromBasket", (item: IProduct) => {
+ 	basketModel.deleteFromBasket(item);
+ 	basket.renderHeaderBasketCounter(basketModel.getAmount());
+ 	basket.renderTotalCost(basketModel.getTotalCost());
+ 	basket.renderItems(basketModel.basketProducts);
  });
  
  events.on("orderForm:open", () => {
  	modal.content = order.render();
  	modal.open();
- 	formModel.items = cartModel.basketProducts.map((item) => item.id);
+ 	formModel.items = basketModel.basketProducts.map((item) => item.id);
  });
  
  events.on("orderForm:paymentSelection", (button: HTMLButtonElement) => {
@@ -113,7 +113,7 @@ import "./scss/styles.scss";
  });
  
  events.on("contactsForm:open", () => {
- 	formModel.total = cartModel.getTotalCost();
+ 	formModel.total = basketModel.getTotalCost();
  	modal.content = contacts.render();
  	modal.open();
  });
@@ -142,9 +142,9 @@ import "./scss/styles.scss";
  				successfulOrderTemplate,
  				events
  			);
- 			modal.content = success.render(cartModel.getTotalCost());
- 			cartModel.clearBasket();
- 			cart.renderHeaderBasketCounter(cartModel.getAmount());
+ 			modal.content = success.render(basketModel.getTotalCost());
+ 			basketModel.clearBasket();
+ 			basket.renderHeaderBasketCounter(basketModel.getAmount());
  			modal.open();
  		})
  		.catch((error) => console.log(error));

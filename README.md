@@ -90,9 +90,6 @@ export interface IWebLarekApi {
 * getProduct(id: number) – получает информацию о товаре.
 * makeOrder(data: IOrderData) – отправляет заказ.
 
-## UML-диаграмма
-Ниже представлена архитектура проекта
-![UML-diagram](./UML_diagram.png)
 
 ## Установка и запуск
 Для установки и запуска проекта необходимо выполнить команды

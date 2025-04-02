@@ -1,8 +1,8 @@
 // Хорошая практика даже простые типы выносить в алиасы
 // Зато когда захотите поменять это достаточно сделать в одном месте
-type EventName = string | RegExp;
-type Subscriber = Function;
-type EmitterEvent = {
+type EventName = string | RegExp; // имя события
+type Subscriber = Function; // функция-обработчик
+type EmitterEvent = { // данные события
 	eventName: string;
 	data: unknown;
 };
@@ -32,6 +32,7 @@ export class EventEmitter implements IEvents {
 	 * Установить обработчик на событие
 	 */
 	on<T extends object>(eventName: EventName, callback: (event: T) => void) {
+		// если обработчиков нет — создаём Set, иначе добавляем обработчик
 		if (!this._events.has(eventName)) {
 			this._events.set(eventName, new Set<Subscriber>());
 		}
@@ -41,6 +42,7 @@ export class EventEmitter implements IEvents {
 	/**
 	 * Снять обработчик с события
 	 */
+	// удаляет обработчик, а если обработчиков больше нет — удаляет событие
 	off(eventName: EventName, callback: Subscriber) {
 		if (this._events.has(eventName)) {
 			this._events.get(eventName)!.delete(callback);
@@ -54,8 +56,9 @@ export class EventEmitter implements IEvents {
 	 * Инициировать событие с данными
 	 */
 	emit<T extends object>(eventName: string, data?: T) {
+		// ищет подписчиков на событие eventName и вызывает их с data
 		this._events.forEach((subscribers, name) => {
-			if (name === "*")
+			if (name === "*") // обработчики "*" срабатывают на любые события
 				subscribers.forEach((callback) =>
 					callback({
 						eventName,
